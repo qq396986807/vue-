@@ -6,5 +6,5 @@ vue简单入门
 
 3、一个联动选项框的示例，主要熟悉下对数组、绑定事件、函数的运用！
 
-
-参考链接：https://juejin.im/post/5a0c191f6fb9a04514639419  作者：守候i
+供方便学习vue
+demo参考链接：https://juejin.im/post/5a0c191f6fb9a04514639419  作者：守候i
