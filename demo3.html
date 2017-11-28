@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style>
+           body{font-family: "微软雅黑";font-size: 14px;}
+           input{font-size: 14px;}
+           body,ul,div,html{padding: 0;margin: 0;}
+           .hidden{display: none;}
+           .main{width: 800px;margin: 0 auto;}
+           li{list-style-type: none;line-height: 40px;position: relative;border: 1px solid transparent;padding: 0 20px;}
+           li .status-span{display: block;width: 10px;height: 10px;background: #ccc;margin: 14px 10px 0 0 ;float: left;}
+           li .status-span.status-end{
+               background: #09f;
+           }
+           li .close{position: absolute;color: #f00;font-size: 20px;line-height: 40px;height: 40px;right: 20px;cursor: pointer;display: none;top: 0;}
+           li:hover{border: 1px solid #09f;}
+           li:hover .close{display: block;}
+           li div{display: block;}
+           li.eidting div{display: none;}
+           li .text2{height: 40px;padding-left: 10px;box-sizing: border-box;margin-left: 10px;width: 80%;display: none;}
+           li.eidting .text2{display: block;}
+           li .text-keyword{height: 40px;padding-left: 10px;box-sizing: border-box;margin-left: 10px;width: 80%;display: none;}
+           .text-keyword{box-sizing: border-box;width: 100%;height: 40px;padding-left: 10px;outline: none;}
+        </style>
+    </head>
+    <body>
+        <div id="app" class="main">
+            <h2>小目标列表</h2>
+            <div class="list">
+                <h3>添加小目标</h3>
+                <input type="text" class="text-keyword" placeholder="输入小目标后，按回车确认" v-model='addText' @keyup.13='addList' />
+                <p>共有{{allList.length}}个目标,{{noend==0?"全部完成了":'已完成'+(allList.length-noend)+'，还有'+noend+'条未完成'}}</p>
+                <p>
+                    <input type="radio" name="chooseType" checked="true" @click='chooseList(1)'/><label>所有目标</label>
+                    <input type="radio" name="chooseType" @click='chooseList(2)'/><label>已完成目标</label>
+                    <input type="radio" name="chooseType" @click='chooseList(3)'/><label>未完成目标</label>
+                </p>
+            </div>
+            <ul>
+                <li class="li1" v-for="(list,index) in newList">
+                    <div>
+                        <span class="status-span" @click="list.status=!list.status" :class="{'status-end':list.status}"></span>
+                        <span>{{list.name}}</span>
+                        <span class="close" @click='delectList(index)'>X</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </body>
+    <script src="vue.min.js"></script>
+    <script type="text/javascript">
+    var app = new Vue({
+        el: "#app",
+        data: {
+          addText:'',
+          allList:[
+               {name:"HTML5",status:false},
+               {name:"CSS3",status:false},
+               {name:"vue",status:false},
+               {name:"react",status:false}
+          ],
+          newList:[],
+        },
+        computed:{
+          noend:function(){
+                      return this.allList.filter(function(item){
+                          return !item.status
+                      }).length;
+                  }
+        },
+        methods:{
+          addList(){
+            this.allList.push({
+                name:this.addText,
+                status:false
+            });
+            //添加后，清空addText
+            this.addText="";
+          },
+          chooseList(type){
+             //type=1时，选择所有目标
+             //type=2时，选择所有已完成目标
+             //type=3时，选择所有未完成目标
+             switch(type){
+                 case 1:this.newList=this.allList;break;
+                 case 2:this.newList=this.allList.filter(function(item){return item.status});break;
+                 case 3:this.newList=this.allList.filter(function(item){return !item.status});break;
+             }
+         },
+         delectList(index){
+             //根据索引，删除数组某一项
+             this.allList.splice(index,1);
+             //更新newList  newList可能经过this.allList.filter()赋值，这样的话，删除了allList不会影响到newList  那么就要手动更新newList
+             this.newList=this.allList;
+         }
+       },
+       mounted(){
+          //初始化，把allList赋值给newList。默认显示所有目标
+          this.newList=this.allList;
+        }
+    });
+    </script>
+</html>
